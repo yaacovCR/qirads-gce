@@ -1,0 +1,16 @@
+/*
+
+!.gitignore
+!crontab.bak
+
+!nginx/
+nginx/*
+
+!nginx/sites-available/
+nginx/sites-available/*
+!nginx/sites-available/qirads.org
+
+!nginx/snippets/
+nginx/snippets/*
+!nginx/snippets/ssl-params.conf
+!nginx/snippets/ssl-qirads.org.conf
