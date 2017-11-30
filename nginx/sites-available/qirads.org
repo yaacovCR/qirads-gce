@@ -1,0 +1,34 @@
+server {
+	listen 80 default_server;
+
+        server_name www.qirads.org qirads.org;
+
+	return 301 https://qirads.org$request_uri;
+}
+
+server {
+	listen 443 ssl http2;
+
+        server_name www.qirads.org;
+
+	include snippets/ssl-qirads.org.conf;
+	include snippets/ssl-params.conf;
+
+	return 301 https://qirads.org$request_uri;
+}
+
+server {
+	listen 443 ssl http2 default_server;
+
+        server_name qirads.org;
+
+	include snippets/ssl-qirads.org.conf;
+	include snippets/ssl-params.conf;
+
+	root /var/www/html;
+	index index.html index.htm index.nginx-debian.html;
+
+	location / {
+		try_files $uri $uri/ =404;
+	}
+}
