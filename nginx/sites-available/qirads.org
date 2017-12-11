@@ -1,15 +1,12 @@
 server {
 	listen 80 default_server;
 
-        server_name www.qirads.org qirads.org;
-
 	return 301 https://qirads.org$request_uri;
+
 }
 
 server {
-	listen 443 ssl http2;
-
-        server_name www.qirads.org;
+	listen 443 ssl http2 default_server;
 
 	include snippets/ssl-qirads.org.conf;
 	include snippets/ssl-params.conf;
@@ -18,7 +15,41 @@ server {
 }
 
 server {
-	listen 443 ssl http2 default_server;
+	listen 443 ssl http2;
+
+	server_name coaster.qirads.org api.qirads.org auth.qirads.org;
+
+	include snippets/ssl-qirads.org.conf;
+	include snippets/ssl-params.conf;
+
+	location / {
+		proxy_pass http://localhost:3000;
+		proxy_http_version 1.1;
+		proxy_set_header Upgrade $http_upgrade;
+		proxy_set_header Connection 'upgrade';
+		proxy_set_header Host $host;
+		proxy_cache_bypass $http_upgrade;
+	}
+}
+
+server {
+	listen 443 ssl http2;
+
+        server_name glass.qirads.org juice.qirads.org schedulizer.qirads.org www.qirads.org;
+
+	include snippets/ssl-qirads.org.conf;
+	include snippets/ssl-params.conf;
+
+	root /var/www/glass/dist;
+	index index.html index.htm index.nginx-debian.html;
+
+	location / {
+		try_files $uri $uri/ =404;
+	}
+}
+
+server {
+	listen 443 ssl http2;
 
         server_name qirads.org;
 
